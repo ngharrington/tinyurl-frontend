@@ -5,38 +5,116 @@ import Grid from "@mui/material/Grid";
 import "./App.css";
 import Paper from "@mui/material/Paper";
 import InputBase from "@mui/material/InputBase";
+import DialogTitle from '@mui/material/DialogTitle';
+import Dialog from '@mui/material/Dialog';
+import PropTypes from 'prop-types';
+import Typography from '@mui/material/Typography';
+import Config from './config/config.js'
+
+function getApiUrl() {
+  return Config.api_url;
+}
+
+function CopyDialog(props) {
+  const { onClose, code, open } = props;
+
+  const handleClose = () => {
+    onClose();
+  };
+
+  const handleClick = () => {
+    var tinyUrl = getApiUrl() + "/tiny/" + code;
+    navigator.clipboard
+      .writeText(tinyUrl)
+      .then(() => { return })
+      .catch(() => {
+        alert("something went wrong");
+      });
+  }
+
+
+  return (
+    <Dialog onClose={handleClose} open={open}>
+      <DialogTitle>Click to copy small url.</DialogTitle>
+      <Typography align="center" variant="h6" sx={{pt: "0px", pl: "15px", pr: "15px"}}>{getApiUrl() + "/tiny/" + code}</Typography>
+      <Button variant="contained" onClick={handleClick}>Copy</Button>
+    </Dialog>
+  );
+}
+
+CopyDialog.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
+};
+
 
 
 function App() {
   const [inputText, setInputText] = useState("");
-  let inputHandler = (e) => {
-    //convert input text to lower case
-    var lowerCase = e.target.value.toLowerCase();
-    setInputText(lowerCase);
+  const [urlCode, setUrlCode] = useState("");
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
   };
 
+  const handleClose = (value) => {
+    setUrlCode("");
+    setOpen(false);
+    setInputText("");
+  };
+
+  let handleChange = (e) => {
+    var lowerCase = e.target.value.toLowerCase();
+    setInputText(lowerCase);
+  }
+
+  let handleClick = (e) => {
+    if (inputText === "") {
+      return
+    }
+    var raw = inputText;
+    var data = {
+      "url": raw 
+    };
+    fetch(getApiUrl() + "/tiny", {
+      method: "POST",
+      body: JSON.stringify(data)
+    })
+      .then((response) => response.json())
+      .then((data) => setUrlCode(data.Code));
+    handleClickOpen();
+  }
+
   return (
-    <div className="main">
-      <div styles={{ marginLeft: "0px" }}>
-        <h1>make a littly bitty baby url</h1>
-        <Grid container spacing={2}>
+    <div className="main" style={{paddingTop: "30px"}}>
+      <div style={{ marginLeft: "5px", marginRight: "5px" }}>
+        <h1 style={{ padding: "10px" }}>make a little bitty baby url</h1>
+        <Grid container alignItems="stretch" style={{ display: "flex" }} spacing={2}>
           <Grid item xs={8}>
             <Paper
               component="form"
-              sx={{ p: "2px 4px", display: "flex", alignItems: "center" }}
+              elevation={4}
             >
               <InputBase
                 sx={{ ml: 1, flex: 1 }}
                 placeholder="Make Tiny Urls"
-                inputProps={{ "aria-label": "make tiny urls" }}
+                label="enter your url"
+                onChange={handleChange}
+                value={inputText}
               />
             </Paper>
           </Grid>
           <Grid item xs={4}>
-            <Button variant="contained">Shorten Url</Button>
+            <Button variant="contained" onClick={handleClick}>Shorten Url</Button>
           </Grid>
         </Grid>
       </div>
+      <CopyDialog
+        open={open}
+        onClose={handleClose}
+        code={urlCode}
+      />
     </div>
   );
 }
