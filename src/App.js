@@ -1,52 +1,15 @@
 import { React, useState } from "react";
-
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import "./App.css";
 import Paper from "@mui/material/Paper";
 import InputBase from "@mui/material/InputBase";
-import DialogTitle from '@mui/material/DialogTitle';
-import Dialog from '@mui/material/Dialog';
-import PropTypes from 'prop-types';
-import Typography from '@mui/material/Typography';
 import Config from './config/config.js'
+import CopyDialog from './components/CopyDialog.js'
 
-function getApiUrl() {
+const GetApiUrl = () => {
   return Config.api_url;
 }
-
-function CopyDialog(props) {
-  const { onClose, code, open } = props;
-
-  const handleClose = () => {
-    onClose();
-  };
-
-  const handleClick = () => {
-    var tinyUrl = getApiUrl() + "/tiny/" + code;
-    navigator.clipboard
-      .writeText(tinyUrl)
-      .then(() => { return })
-      .catch(() => {
-        alert("something went wrong");
-      });
-  }
-
-
-  return (
-    <Dialog onClose={handleClose} open={open}>
-      <DialogTitle>Click to copy small url.</DialogTitle>
-      <Typography align="center" variant="h6" sx={{pt: "0px", pl: "15px", pr: "15px"}}>{getApiUrl() + "/tiny/" + code}</Typography>
-      <Button variant="contained" onClick={handleClick}>Copy</Button>
-    </Dialog>
-  );
-}
-
-CopyDialog.propTypes = {
-  onClose: PropTypes.func.isRequired,
-  open: PropTypes.bool.isRequired,
-};
-
 
 
 function App() {
@@ -77,7 +40,7 @@ function App() {
     var data = {
       "url": raw 
     };
-    fetch(getApiUrl() + "/tiny", {
+    fetch(GetApiUrl() + "/tiny", {
       method: "POST",
       body: JSON.stringify(data)
     })
@@ -114,6 +77,7 @@ function App() {
         open={open}
         onClose={handleClose}
         code={urlCode}
+        apiUrl={GetApiUrl() + "/gtiny"}
       />
     </div>
   );
