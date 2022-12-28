@@ -12,8 +12,12 @@ function CopyDialog(props) {
     onClose();
   };
 
+  const getCodeUrl = () => {
+    return apiUrl + "/" + code;
+  }
+
   const handleClick = () => {
-    var tinyUrl = apiUrl + "/" + code;
+    var tinyUrl = getCodeUrl();
     navigator.clipboard
       .writeText(tinyUrl)
       .then(() => { return })
@@ -26,7 +30,7 @@ function CopyDialog(props) {
   return (
     <Dialog onClose={handleClose} open={open}>
       <DialogTitle>Click to copy small url.</DialogTitle>
-      <Typography align="center" variant="h6" sx={{pt: "0px", pl: "15px", pr: "15px"}}>{apiUrl + "/" + code}</Typography>
+      <Typography align="center" variant="h6" sx={{pt: "0px", pl: "15px", pr: "15px"}}>{getCodeUrl()}</Typography>
       <Button variant="contained" onClick={handleClick}>Copy</Button>
     </Dialog>
   );

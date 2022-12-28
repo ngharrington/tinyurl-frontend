@@ -12,6 +12,7 @@ const GetApiUrl = () => {
 }
 
 
+
 function App() {
   const [inputText, setInputText] = useState("");
   const [urlCode, setUrlCode] = useState("");
@@ -40,7 +41,7 @@ function App() {
     var data = {
       "url": raw 
     };
-    fetch(GetApiUrl() + "/tiny", {
+    fetch(GetApiUrl(), {
       method: "POST",
       body: JSON.stringify(data)
     })
@@ -77,7 +78,7 @@ function App() {
         open={open}
         onClose={handleClose}
         code={urlCode}
-        apiUrl={GetApiUrl() + "/gtiny"}
+        apiUrl={GetApiUrl()}
       />
     </div>
   );
