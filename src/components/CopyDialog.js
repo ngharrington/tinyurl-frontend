@@ -20,9 +20,7 @@ function CopyDialog(props) {
     var tinyUrl = getCodeUrl();
     navigator.clipboard
       .writeText(tinyUrl)
-      .then(() => {
-        return;
-      })
+      .then(() => {})
       .catch(() => {
         alert("something went wrong");
       });

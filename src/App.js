@@ -6,19 +6,14 @@ import Paper from "@mui/material/Paper";
 import InputBase from "@mui/material/InputBase";
 import Config from "./config/config.js";
 import CopyDialog from "./components/CopyDialog.js";
-import Alert from "@mui/material/Alert"
-
-const GetApiUrl = () => {
-  return Config.api_url;
-};
-
+import Alert from "@mui/material/Alert";
 
 function ErrorAlert(enable) {
   return (
     <div>
       {enable && <Alert severity="error">Enter a valid web url!</Alert>}
     </div>
-  )
+  );
 }
 
 function App() {
@@ -41,7 +36,7 @@ function App() {
     setInputText("");
   };
 
-  let handleChange = (e) => {
+  const handleChange = (e) => {
     if (errorOpen) {
       setErrorOpen(false);
     }
@@ -57,22 +52,22 @@ function App() {
     var data = {
       url: inputText,
     };
-    fetch(GetApiUrl(), {
+    fetch(Config.api_url, {
       method: "POST",
       body: JSON.stringify(data),
     })
-      .then(response => {
+      .then((response) => {
         if (response.ok) {
           return response;
         } else {
           throw Error(response.statusText);
         }
       })
-      .catch(error => {
+      .catch((error) => {
         isError = true;
         handleClickError();
       })
-      .then(response => {
+      .then((response) => {
         var data;
         if (!isError) {
           data = response.json();
@@ -80,20 +75,19 @@ function App() {
         }
         data = "";
       })
-      .catch(error => {
+      .catch((error) => {
         isError = true;
         handleClickError();
       })
-      .then(data => setUrlCode(data.Code))
+      .then((data) => setUrlCode(data.Code))
       .then(() => {
-        if (!isError){
-          handleClickOpen()
+        if (!isError) {
+          handleClickOpen();
         }
       })
-      .catch(error => {
+      .catch((error) => {
         handleClickError();
-      })
-      
+      });
   };
 
   return (
@@ -128,7 +122,7 @@ function App() {
         open={open}
         onClose={handleClose}
         code={urlCode}
-        apiUrl={GetApiUrl()}
+        apiUrl={Config.api_url}
       />
       {ErrorAlert(errorOpen)};
     </div>
