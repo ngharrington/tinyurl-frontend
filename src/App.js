@@ -44,6 +44,11 @@ function App() {
     setInputText(lowerCase);
   };
 
+  const onSubmit = (e) => {
+    handleClick();
+    e.preventDefault();
+  }
+
   let handleClick = (e) => {
     if (inputText === "") {
       return;
@@ -101,7 +106,7 @@ function App() {
           spacing={2}
         >
           <Grid item xs={8}>
-            <Paper component="form" elevation={4}>
+            <Paper component="form" elevation={4} onSubmit={onSubmit}>
               <InputBase
                 sx={{ ml: 1, flex: 1 }}
                 placeholder="enter a url"
